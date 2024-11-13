@@ -30,31 +30,53 @@ const addProduct = async (req, res) => {
 const addStock = async (req, res) => {
   const { id, nbrDemiKg, nbrOneKg } = await req.body;
 
-  if (!id || (!nbrDemiKg && !nbrOneKg))
-    return res.json({
-      success: false,
-      message: "Données non reçue pour la mise à jour",
+  try {
+    if (!id || (!nbrDemiKg && !nbrOneKg))
+      return res.json({
+        success: false,
+        message: "Données non reçue pour la mise à jour",
+      });
+    const updatedProduct = await products.findOne({ where: { id: id } });
+
+    if (!updatedProduct)
+      return res.json({ success: false, message: "Produit n'existe pas" });
+    if (nbrDemiKg)
+      updatedProduct.nbrDemiKg =
+        Number(updatedProduct.nbrDemiKg) + Number(nbrDemiKg);
+    if (nbrOneKg)
+      updatedProduct.nbrOneKg =
+        Number(updatedProduct.nbrOneKg) + Number(nbrOneKg);
+
+    const result = await updatedProduct.save();
+
+    if (!result)
+      return res.json({ success: false, message: "Produit non mise à jour" });
+    res.json({
+      success: true,
+      message:
+        `${nbrDemiKg ? nbrDemiKg : nbrOneKg}` +
+        " sachets " +
+        `${nbrDemiKg ? "de demi" : "d'un"}` +
+        " kilo ajouté à " +
+        updatedProduct.productName,
     });
-  const updatedProduct = await products.findOne({ where: { id: id } });
-
-  if (!updatedProduct)
-    return res.json({ success: false, message: "Produit n'existe pas" });
-  if (nbrDemiKg) updatedProduct.nbrDemiKg = Number(updatedProduct.nbrDemiKg) + Number(nbrDemiKg);
-  if (nbrOneKg) updatedProduct.nbrOneKg = Number(updatedProduct.nbrOneKg) + Number(nbrOneKg);
-
-  const result = await updatedProduct.save();
-
-  if (!result)
-    return res.json({ success: false, message: "Produit non mise à jour" });
-  res.json({
-    success: true,
-    message:
-      `${nbrDemiKg ? nbrDemiKg : nbrOneKg}` +
-      " sachets de " +
-      `${nbrDemiKg ? "demi" : "un"}` +
-      " kilo ajouté à " +
-      updatedProduct.productName,
-  });
+  } catch (error) {
+    console.log("ERROR ADD STOCK", error);
+    res.json({ success: false, message: "Erreur serveur" });
+  }
 };
 
-module.exports = { addProduct, addStock };
+const getStocks = async (req, res) => {
+  try {
+    const allProducts = await products.findAll();
+
+    if (!allProducts)
+      return res.json({ success: false, message: "Aucun données" });
+    res.json({ success: true, datas: allProducts });
+  } catch (error) {
+    console.log("ERROR GET STOCKS", error);
+    res.json({ success: false, message: "Erreur serveur" });
+  }
+};
+
+module.exports = { addProduct, addStock, getStocks };
