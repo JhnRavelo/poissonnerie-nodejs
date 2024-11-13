@@ -102,4 +102,29 @@ const deleteStock = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, addStock, getStocks, deleteStock };
+const updateStock = async (req, res) => {
+  const { id, productName, priceOneKg, nbrDemiKg, nbrOneKg } = await req.body;
+  try {
+    if (!productName || !priceOneKg || !nbrDemiKg || !nbrOneKg || !id)
+      return res.json({ success: false, message: "Données non reçue" });
+    const updatedProduct = await products.findOne({ where: { id } });
+
+    if (!updatedProduct)
+      return res.json({ success: false, message: "Produit n'existe pas" });
+    updatedProduct.set({ productName, priceOneKg, nbrDemiKg, nbrOneKg });
+    const result = await updatedProduct.save();
+
+    if (!result)
+      return res.json({ success: false, message: "Produit non mise à jour" });
+
+    res.json({
+      success: true,
+      message: updatedProduct.productName + " a été mise à jour",
+    });
+  } catch (error) {
+    res.json({ success: false, message: "Erreur serveur" });
+    console.log("ERROR UPDATED PRODUCT", error);
+  }
+};
+
+module.exports = { addProduct, addStock, getStocks, deleteStock, updateStock };

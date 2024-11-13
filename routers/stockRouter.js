@@ -4,10 +4,11 @@ const {
   addStock,
   getStocks,
   deleteStock,
+  updateStock,
 } = require("../controllers/stockController");
 const router = express.Router();
 
-router.route("/").post(addProduct).get(getStocks);
+router.route("/").post(addProduct).get(getStocks).put(updateStock);
 router.route("/oneKg").post(addStock);
 router.route("/demiKg").post(addStock);
 router.delete("/:id", deleteStock);
