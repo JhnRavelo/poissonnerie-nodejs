@@ -79,4 +79,27 @@ const getStocks = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, addStock, getStocks };
+const deleteStock = async (req, res) => {
+  try {
+    const id = req?.params?.id;
+
+    if (!id) return res.json({ success: false, message: "Données non envoyé" });
+    const deletedProduct = await products.findOne({ where: { id } });
+
+    if (!deletedProduct)
+      return res.json({ success: false, message: "Produit n'existe pas" });
+    const result = await deletedProduct.destroy();
+
+    if (!result)
+      return res.json({ success: false, message: "Produit non effacé" });
+    res.json({
+      success: true,
+      message: "Le produit " + deletedProduct.productName + " a été supprimé",
+    });
+  } catch (error) {
+    res.json({ success: false, message: "Erreur serveur" });
+    console.log("ERROR DELETE STOCK", error);
+  }
+};
+
+module.exports = { addProduct, addStock, getStocks, deleteStock };
