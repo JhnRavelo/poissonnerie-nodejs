@@ -43,3 +43,5 @@ app.use(express.urlencoded({ extended: true }));
 
 const stockRouter = require("./routers/stockRouter");
 app.use("/stock", stockRouter);
+const achatRouter = require("./routers/achatRouter");
+app.use("/achat", achatRouter);
