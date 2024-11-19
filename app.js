@@ -3,6 +3,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const db = require("./databases/models");
+const { exec } = require("child_process");
 require("dotenv").config();
 const app = express();
 const mysql = require("mysql2/promise");
@@ -21,6 +22,17 @@ mysql
           app.listen(process.env.SERVER_PORT, async () => {
             try {
               console.log(`http://localhost:${process.env.SERVER_PORT}`);
+              exec(
+                "start chrome http://localhost:4000",
+                (err, stdout, stderr) => {
+                  if (err) {
+                    console.error(`Error opening browser: ${err}`);
+                    return;
+                  }
+                  console.log(`stdout: ${stdout}`);
+                  console.error(`stderr: ${stderr}`);
+                }
+              );
             } catch (error) {
               console.log("BUILD", error);
             }
