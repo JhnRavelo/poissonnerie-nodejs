@@ -16,7 +16,7 @@ const addProduct = async (req, res) => {
       priceOneKg,
       nbrDemiKg,
       nbrOneKg,
-      nbrKg,
+      nbrKg: parseFloat(nbrKg),
     });
 
     if (!addedProduct)
@@ -104,15 +104,15 @@ const deleteStock = async (req, res) => {
 };
 
 const updateStock = async (req, res) => {
-  const { id, productName, priceOneKg, nbrDemiKg, nbrOneKg } = await req.body;
+  const { id, productName, priceOneKg, nbrDemiKg, nbrOneKg, nbrKg } = await req.body;
   try {
-    if (!productName || !priceOneKg || !nbrDemiKg || !nbrOneKg || !id)
+    if (!productName || !priceOneKg || !nbrDemiKg || !nbrOneKg || !id || !nbrKg)
       return res.json({ success: false, message: "Données non reçue" });
     const updatedProduct = await products.findOne({ where: { id } });
 
     if (!updatedProduct)
       return res.json({ success: false, message: "Produit n'existe pas" });
-    updatedProduct.set({ productName, priceOneKg, nbrDemiKg, nbrOneKg });
+    updatedProduct.set({ productName, priceOneKg, nbrDemiKg, nbrOneKg, nbrKg: parseFloat(nbrKg) });
     const result = await updatedProduct.save();
 
     if (!result)
