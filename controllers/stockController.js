@@ -1,9 +1,9 @@
 const { products } = require("../databases/models");
 
 const addProduct = async (req, res) => {
-  const { productName, priceOneKg, nbrDemiKg, nbrOneKg } = await req.body;
+  const { productName, priceOneKg, nbrDemiKg, nbrOneKg, nbrKg } = await req.body;
   try {
-    if (!productName || !priceOneKg || !nbrDemiKg || !nbrOneKg)
+    if (!productName || !priceOneKg || !nbrDemiKg || !nbrOneKg || !nbrKg)
       return res.json({ success: false, message: "Données non reçue" });
     const isProduct = await products.findOne({
       where: { productName: productName },
@@ -16,6 +16,7 @@ const addProduct = async (req, res) => {
       priceOneKg,
       nbrDemiKg,
       nbrOneKg,
+      nbrKg,
     });
 
     if (!addedProduct)

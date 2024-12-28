@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.INTEGER,
     },
+    nbrKg: {
+      allowNull: true,
+      type: DataTypes.FLOAT,
+    },
     nbrDemiKg: {
       allowNull: true,
       type: DataTypes.INTEGER,

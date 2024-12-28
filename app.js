@@ -22,17 +22,17 @@ mysql
           app.listen(process.env.SERVER_PORT, async () => {
             try {
               console.log(`http://localhost:${process.env.SERVER_PORT}`);
-              exec(
-                "start chrome http://localhost:4000",
-                (err, stdout, stderr) => {
-                  if (err) {
-                    console.error(`Error opening browser: ${err}`);
-                    return;
-                  }
-                  console.log(`stdout: ${stdout}`);
-                  console.error(`stderr: ${stderr}`);
-                }
-              );
+              // exec(
+              //   "start chrome http://localhost:4000",
+              //   (err, stdout, stderr) => {
+              //     if (err) {
+              //       console.error(`Error opening browser: ${err}`);
+              //       return;
+              //     }
+              //     console.log(`stdout: ${stdout}`);
+              //     console.error(`stderr: ${stderr}`);
+              //   }
+              // );
             } catch (error) {
               console.log("BUILD", error);
             }
