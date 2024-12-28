@@ -1,3 +1,4 @@
+const { NUMBER } = require("sequelize");
 const { products } = require("../databases/models");
 
 const addProduct = async (req, res) => {
@@ -29,10 +30,10 @@ const addProduct = async (req, res) => {
 };
 
 const addStock = async (req, res) => {
-  const { id, nbrDemiKg, nbrOneKg } = await req.body;
+  const { id, nbrDemiKg, nbrOneKg, nbrKg } = await req.body;
 
   try {
-    if (!id || (!nbrDemiKg && !nbrOneKg))
+    if (!id || (!nbrDemiKg && !nbrOneKg && !nbrKg))
       return res.json({
         success: false,
         message: "Données non reçue pour la mise à jour",
@@ -47,6 +48,9 @@ const addStock = async (req, res) => {
     if (nbrOneKg)
       updatedProduct.nbrOneKg =
         Number(updatedProduct.nbrOneKg) + Number(nbrOneKg);
+    if (nbrKg)
+      updatedProduct.nbrKg =
+        parseFloat(updatedProduct.nbrKg) + parseFloat(nbrKg);
 
     const result = await updatedProduct.save();
 
@@ -55,10 +59,10 @@ const addStock = async (req, res) => {
     res.json({
       success: true,
       message:
-        `${nbrDemiKg ? nbrDemiKg : nbrOneKg}` +
-        " sachets " +
-        `${nbrDemiKg ? "de demi" : "d'un"}` +
-        " kilo ajouté à " +
+        `${nbrDemiKg ? nbrDemiKg : nbrOneKg ? nbrOneKg : nbrKg}` +
+        `${(nbrDemiKg || nbrOneKg) ? " sachet(s) " : ""}` +
+        `${nbrDemiKg ? "de demi" : nbrOneKg ? "d'un" : ""}` +
+        " kilo(s) ajouté à " +
         updatedProduct.productName,
     });
   } catch (error) {
