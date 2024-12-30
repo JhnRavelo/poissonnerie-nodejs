@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     nbr: {
       allowNull: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
     },
     total: {
       allowNull: true,

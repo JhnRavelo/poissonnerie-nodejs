@@ -1,4 +1,3 @@
-const { NUMBER } = require("sequelize");
 const { products } = require("../databases/models");
 
 const addProduct = async (req, res) => {

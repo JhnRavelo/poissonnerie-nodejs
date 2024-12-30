@@ -24,7 +24,7 @@ const addAchat = async (req, res) => {
             updatedProduct[achat.field] =
               Number(updatedProduct[achat.field]) - Number(achat.nbr);
             await updatedProduct.save();
-            const type = achat.field == "nbrDemiKg" ? "de demi" : "d'un";
+            const type = achat.field == "nbrDemiKg" ? "de demi" : achat.field == "nbrKg" ? "gram" : "d'un";
             const date = new Date();
             const month = date.getMonth() + 1;
             const day = date.getDate();
@@ -34,7 +34,7 @@ const addAchat = async (req, res) => {
             });
 
             if (updatedAchat) {
-              updatedAchat.nbr = Number(updatedAchat.nbr) + Number(achat.nbr);
+              updatedAchat.nbr = parseFloat(updatedAchat.nbr) + parseFloat(achat.nbr);
               updatedAchat.total =
                 Number(updatedAchat.total) + Number(achat.total);
               await updatedAchat.save();
