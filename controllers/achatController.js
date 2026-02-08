@@ -1,4 +1,5 @@
 const { achats, products } = require("../databases/models");
+const { fn, col } = require("sequelize");
 
 const addAchat = async (req, res) => {
   const { allAchats } = await req.body;
@@ -90,9 +91,12 @@ const getDaysInAMonth = async (req, res) => {
 
     const days = await achats.findAll({
       where: { year, month },
-      attributes: ["day"],
+      attributes: [
+        "day",
+        [fn("MAX", col("createdAt")), "lastCreatedAt"],
+      ],
       group: ["day"],
-      order: [["createdAt", "DESC"]],
+      order: [[fn("MAX", col("createdAt")), "DESC"]],
       raw: true,
     });
 
