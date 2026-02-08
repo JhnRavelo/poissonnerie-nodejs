@@ -24,7 +24,7 @@ app.use("/achat", achatRouter);
 
 // ⬇️ LA PARTIE MAGIQUE POUR ELECTRON
 async function startServer() {
-  await db.sequelize.sync({ alter: true });
+  await db.sequelize.sync();
 
   return new Promise((resolve) => {
     const PORT = process.env.SERVER_PORT || 3000;
