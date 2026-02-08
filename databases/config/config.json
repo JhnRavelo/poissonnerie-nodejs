@@ -4,13 +4,13 @@
     "password": null,
     "database": "poissonnerie",
     "host": "127.0.0.1",
-    "dialect": "mysql",
+    "dialect": "sqlite",
+    "storage": "database.sqlite",
     "dialectOptions": {
       "dateStrings": true,
-      "typeCast": true,
-      "timezone": "+03:00"
+      "typeCast": true
     },
-    "timezone": "+03:00"
+    "logging": false
   },
   "test": {
     "username": "root",

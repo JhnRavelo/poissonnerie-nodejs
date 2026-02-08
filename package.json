@@ -2,16 +2,34 @@
   "name": "poissonnerie-app",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
-  "bin": "app.js",
-  "pkg": {
-    "targets": [
-      "node18-win-x64"
-    ]
-  },
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "electron": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.poissonnerie.app",
+    "productName": "Poissonnerie",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "files": [
+      "**/*",
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!node_modules/.bin"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -24,6 +42,11 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.6.5",
     "open": "^10.1.0",
-    "sequelize": "^6.35.2"
+    "sequelize": "^6.35.2",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^26.7.0"
   }
 }

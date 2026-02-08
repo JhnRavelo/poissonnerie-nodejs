@@ -1,59 +1,39 @@
+require("dotenv").config({ path: ".env.production" });
 const express = require("express");
-const cors = require("cors");
+const path = require("path");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const db = require("./databases/models");
-const { exec } = require("child_process");
-require("dotenv").config();
+const publicPath = path.join(__dirname, "public");
+
 const app = express();
-const mysql = require("mysql2/promise");
 
-mysql
-  .createConnection({
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-  })
-  .then((connection) => {
-    connection
-      .query(`CREATE DATABASE IF NOT EXISTS ${process.env.DATABASE_NAME};`)
-      .then(() => {
-        db.sequelize.options.logging = false;
-        db.sequelize.sync({ alter: true }).then(() => {
-          app.listen(process.env.SERVER_PORT, async () => {
-            try {
-              console.log(`http://localhost:${process.env.SERVER_PORT}`);
-              // exec(
-              //   "start chrome http://localhost:4000",
-              //   (err, stdout, stderr) => {
-              //     if (err) {
-              //       console.error(`Error opening browser: ${err}`);
-              //       return;
-              //     }
-              //     console.log(`stdout: ${stdout}`);
-              //     console.error(`stderr: ${stderr}`);
-              //   }
-              // );
-            } catch (error) {
-              console.log("BUILD", error);
-            }
-          });
-        });
-      });
-  });
-
-app.use(
-  cors({
-    credentials: true,
-    origin: ["http://localhost:5173"],
-  })
-);
-app.use(express.static("public/"));
+app.use(express.static(publicPath));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(publicPath, "index.html"));
+});
 app.use(cookieParser());
-
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 const stockRouter = require("./routers/stockRouter");
 app.use("/stock", stockRouter);
+
 const achatRouter = require("./routers/achatRouter");
 app.use("/achat", achatRouter);
+
+// ⬇️ LA PARTIE MAGIQUE POUR ELECTRON
+async function startServer() {
+  await db.sequelize.sync({ alter: true });
+
+  return new Promise((resolve) => {
+    const PORT = process.env.SERVER_PORT || 3000;
+
+    app.listen(PORT, () => {
+      console.log(`Server ready at http://localhost:${PORT}`);
+      resolve();
+    });
+  });
+}
+
+module.exports = { startServer };

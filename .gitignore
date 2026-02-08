@@ -1,5 +1,9 @@
 node_modules
 .env
+.env.production
 package-lock.json
+dist
+database.sqlite
+dist.7z
 Si il y a une erreur de xampp.txt
 lancez_l'appli.bat
